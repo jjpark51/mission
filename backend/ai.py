@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "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"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", ""))
 
 async def generate_ai_response(message: str, conversation_history: List[Dict[str, Any]] = None) -> str:
     """
