@@ -10,7 +10,7 @@ class User(Base):
     username = Column(String(50), unique=True, index=True)
     password = Column(String(255))
     
-    # Relationships
+    # relationships
     conversations = relationship("Conversation", back_populates="user", cascade="all, delete-orphan")
 
 class Conversation(Base):
@@ -20,9 +20,9 @@ class Conversation(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     title = Column(String(255))
     
-    # Relationships
+    # relationships
     user = relationship("User", back_populates="conversations")
-    # Use the correct column name in the join condition
+    # use the correct column name in the join condition
     messages = relationship(
         "Message", 
         back_populates="conversation", 
@@ -34,11 +34,11 @@ class Message(Base):
     __tablename__ = "messages"
 
     id = Column(Integer, primary_key=True, index=True)
-    conversation_id = Column(Integer, ForeignKey("conversations.id", ondelete="CASCADE"))  # Correct column name
+    conversation_id = Column(Integer, ForeignKey("conversations.id", ondelete="CASCADE"))  
     content = Column(Text)
     is_user = Column(Boolean, default=True)
     
-    # Use the correct column name
+    # use the correct column name
     conversation = relationship(
         "Conversation", 
         back_populates="messages",

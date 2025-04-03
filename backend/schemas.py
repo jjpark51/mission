@@ -3,7 +3,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 from datetime import datetime
 
-# User schemas (existing)
+# user schemas 
 class UserBase(BaseModel):
     username: str
 
@@ -19,7 +19,7 @@ class User(UserBase):
     
     model_config = ConfigDict(from_attributes=True)
 
-# Token schemas (existing)
+# token schemas 
 class Token(BaseModel):
     token: str
     token_type: str
@@ -28,7 +28,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Optional[str] = None
 
-# Conversation schemas
+# conversation schemas
 class ConversationBase(BaseModel):
     title: str
 
@@ -41,10 +41,10 @@ class Conversation(ConversationBase):
     
     model_config = ConfigDict(from_attributes=True)
 
-# Message schemas
+# message schemas
 class MessageBase(BaseModel):
     content: str
-    is_user: bool = True  # Default to user message
+    is_user: bool = True  
 
 class MessageCreate(MessageBase):
     conversation_id: int

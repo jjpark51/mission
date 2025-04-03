@@ -5,7 +5,9 @@ import models
 import schemas
 from auth import get_password_hash, verify_password
 
-# User operations
+# --------------------------------------------------------
+# authentication functions
+# user operations
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
 
@@ -13,16 +15,16 @@ def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 
 def create_user(db: Session, user: schemas.UserCreate):
-    # Hash the password
+    # hash the password
     hashed_password = get_password_hash(user.password)
     
-    # Create new user
+    # create new user
     db_user = models.User(
         username=user.username,
         password=hashed_password
     )
     
-    # Add to database
+    # add to database
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -39,7 +41,8 @@ def authenticate_user(db: Session, username: str, password: str):
         
     return user
 
-# Conversation operations
+# --------------------------------------------------------
+# conversation functions
 def get_conversation(db: Session, conversation_id: int):
     return db.query(models.Conversation).filter(models.Conversation.id == conversation_id).first()
 
@@ -68,7 +71,8 @@ def delete_conversation(db: Session, conversation_id: int):
         return True
     return False
 
-# Message operations
+# -----------------------------------------------
+# message functions
 def get_message(db: Session, message_id: int):
     return db.query(models.Message).filter(models.Message.id == message_id).first()
 
