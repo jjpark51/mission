@@ -5,15 +5,10 @@ mission/node_modules
 /.pnp
 .pnp.js
 venv
-backend/env
-../backend/.env
 # testing
 /coverage
-\backend\.env
 .env
-/backend/.env
-backend/.env
-.env
+__pycache__
 /
 # production
 /build
