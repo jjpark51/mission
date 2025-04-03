@@ -1,70 +1,80 @@
-# Getting Started with Create React App
+# ChatApp Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview and Key Strategies
 
-## Available Scripts
+Implement a real-time AI chatbot interface developed using React. 
 
-In the project directory, you can run:
+### Key Strategies:
 
-### `npm start`
+1. **Routing System**: implemented navigation between authentication and chat page via React Router.
+2. **Token-Based Authentication**: maintained user sessions by storing JWT tokens in local storage.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Installation and Setup Guide
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Requirements
 
-### `npm test`
+- FastAPI backend server must be running
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation Steps
 
-### `npm run build`
+1. Clone the repository:
+   ```bash
+   git clone [URL]
+   cd mission
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Running the Application
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Start the development server:
+```bash
+npm start
+```
 
-### `npm run eject`
+The application runs at `http://localhost:3000` by default.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Core Features and User Journey
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Core Features
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. **User Authentication**
+   - signup and login interface
+   - Token-based authentication
 
-## Learn More
+2. **Conversation Interface**
+   - Real-time message exchange
+   - Message input and sending
+   - Loading indicators response status
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. **Conversation Management**
+   - Creating new conversations
+   - Viewing previous conversations
+   - Deleting conversations
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. **Responsive Design**
+   - Optimized for various devices including desktop and mobile
+   - Intuitive layout following ChatGPT's page UI
 
-### Code Splitting
+### User Journey
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. **Authentication Phase**:
+   - Users see the login/signup screen when accessing the app.
 
-### Analyzing the Bundle Size
+2. **Conversation List**:
+   - After logging in -> users can see their previous conversations in the sidebar.
+   - They can start a new conversation by clicking the "New Chat" button.
+   - Selecting a conversation loads its message history.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3. **Conversing with AI**:
+   - Users can type messages in the input field and send them.
+   - The AI response is displayed in the conversation area when it arrives.
 
-### Making a Progressive Web App
+4. **Conversation Delete**:
+   - Users can delete conversations by clicking the delete icon next to specific conversations in the list.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
