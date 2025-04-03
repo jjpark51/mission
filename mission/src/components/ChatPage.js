@@ -3,41 +3,42 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/ChatStyle.css';
 
 const ChatPage = () => {
-  const [conversations, setConversations] = useState([]);
-  const [selectedConversation, setSelectedConversation] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  const [conversations, setConversations] = useState([]); // ALL user convos
+  const [selectedConversation, setSelectedConversation] = useState(null); // active convos
+  const [messages, setMessages] = useState([]); // holds mssgs of current convo
+  const [inputMessage, setInputMessage] = useState(''); // tracks user's input
+  const [isLoading, setIsLoading] = useState(false); // loading animation for AI response
+  const [user, setUser] = useState(null); // store the logged-in user's info
   
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(null); 
   const navigate = useNavigate();
   
-  // Check if user is logged in
+  // check if user is logged in
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     
+    // if user isn't logged in -> back to login page
     if (!token || !userId) {
       navigate('/');
       return;
     }
     
-    // Fetch user data
+    // fetch user data
     fetchUserData(userId, token);
     
-    // Fetch user's conversations
+    // fetch user's conversations
     fetchConversations(userId, token);
   }, [navigate]);
   
-  // Scroll to bottom of messages
+  // scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
   
   const fetchUserData = async (userId, token) => {
     try {
-      // Replace with your actual API endpoint
+      // replace with your actual API endpoint
       const response = await fetch(`http://localhost:8000/api/users/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -50,6 +51,7 @@ const ChatPage = () => {
       
       const userData = await response.json();
       setUser(userData);
+      console.log('User data:', userData);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -57,7 +59,7 @@ const ChatPage = () => {
   
   const fetchConversations = async (userId, token) => {
     try {
-      // Replace with your actual API endpoint
+      // replace with your actual API endpoint
       const response = await fetch(`http://localhost:8000/api/users/${userId}/conversations`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -70,11 +72,15 @@ const ChatPage = () => {
       
       const conversationsData = await response.json();
       setConversations(conversationsData);
+      console.log('Conversations:', conversationsData)
+      console.log(conversationsData)
       
-      // If there are conversations, select the most recent one
+      // if there are conversations -> select the most recent one
       if (conversationsData.length > 0) {
-        setSelectedConversation(conversationsData[0].id);
-        fetchMessages(conversationsData[0].id, token);
+        console.log("Conversations Data length: ", conversationsData.length)
+
+        setSelectedConversation(conversationsData[conversationsData.length - 1].id);
+        fetchMessages(conversationsData[conversationsData.length - 1].id, token);
       }
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -83,7 +89,7 @@ const ChatPage = () => {
   
   const fetchMessages = async (conversationId, token) => {
     try {
-      // Replace with your actual API endpoint
+      // replace with your actual API endpoint
       const response = await fetch(`http://localhost:8000/api/conversations/${conversationId}/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -96,6 +102,7 @@ const ChatPage = () => {
       
       const messagesData = await response.json();
       setMessages(messagesData);
+      console.log("Messages:", messagesData);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
@@ -106,12 +113,11 @@ const ChatPage = () => {
     const userId = localStorage.getItem('userId');
     
     if (!token || !userId) {
-      navigate('/auth');
+      navigate('/');
       return;
     }
     
     try {
-      // Replace with your actual API endpoint
       const response = await fetch('http://localhost:8000/api/conversations', {
         method: 'POST',
         headers: {
@@ -121,7 +127,7 @@ const ChatPage = () => {
         body: JSON.stringify({
           user_id: userId,
 
-          title: 'New Conversation' // You can generate a title based on the first message later
+          title: 'New Convo' 
         })
       });
       
@@ -130,9 +136,12 @@ const ChatPage = () => {
       }
       
       const newConversation = await response.json();
-      setConversations([newConversation, ...conversations]);
+      // append new convo to the conversation list
+      setConversations([ ...conversations, newConversation]);
       setSelectedConversation(newConversation.id);
       setMessages([]);
+      console.log('New conversation created:', newConversation);
+      console.log(conversations);
     } catch (error) {
       console.error('Error creating conversation:', error);
     }
@@ -149,11 +158,12 @@ const ChatPage = () => {
       return;
     }
     
-    // Add user message to UI immediately
+    // add user message to UI immediately
     const userMessage = {
       id: `temp-${Date.now()}`,
       conversation_id: selectedConversation,
       content: inputMessage,
+      is_user: true,
     };
     
     setMessages([...messages, userMessage]);
@@ -161,7 +171,7 @@ const ChatPage = () => {
     setIsLoading(true);
     
     try {
-      // 1. Save user message to your backend
+      // 1. save user message to your backend
       const messageResponse = await fetch('http://localhost:8000/api/messages', {
         method: 'POST',
         headers: {
@@ -181,7 +191,7 @@ const ChatPage = () => {
       
       const savedMessage = await messageResponse.json();
       
-      // 2. Get AI response using OpenAI API
+      // 2. get AI response using OpenAI API
       const openAIResponse = await fetch('http://localhost:8000/api/ai/generate', {
         method: 'POST',
         headers: {
@@ -200,7 +210,7 @@ const ChatPage = () => {
       
       const aiMessageData = await openAIResponse.json();
       
-      // 3. Update messages with both user message and AI response
+      // 3. update messages with both user message and AI response
       setMessages(currentMessages => [
         ...currentMessages.filter(msg => msg.id !== userMessage.id),
         savedMessage,
@@ -208,32 +218,64 @@ const ChatPage = () => {
       ]);
     } catch (error) {
       console.error('Error sending message:', error);
-      // Show error in UI
+      // show error in UI
     } finally {
       setIsLoading(false);
     }
   };
   
+
+  const selectConversation = (conversationId) => {
+    setSelectedConversation(conversationId);
+    const token = localStorage.getItem('token');
+    fetchMessages(conversationId, token);
+  };
+
+  const deleteConversation = async (e, conversationId) => {
+    // stop event propagation to prevent selecting the conversation when deleting
+    e.stopPropagation();
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
+      return;
+    }
+    
+    try {
+      // call the API to delete the conversation
+      const response = await fetch(`http://localhost:8000/api/conversations/${conversationId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete conversation');
+      }
+      
+      // update the state to remove the deleted conversation
+      setConversations(conversations.filter(conv => conv.id !== conversationId));
+      
+      // if the deleted conversation was selected, clear the selection and messages
+      if (selectedConversation === conversationId) {
+        setSelectedConversation(null);
+        setMessages([]);
+      }
+    } catch (error) {
+      console.error('Error deleting conversation:', error);
+    }
+  };
+
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     navigate('/');
   };
   
-  const selectConversation = (conversationId) => {
-    setSelectedConversation(conversationId);
-    const token = localStorage.getItem('token');
-    fetchMessages(conversationId, token);
-  };
-  
-  const formatDate = (dateString) => {
-    const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
   return (
     <div className="chat-container">
-      {/* Sidebar */}
       <div className="sidebar">
         <div className="sidebar-header">
           <h2>Conversations</h2>
@@ -255,7 +297,8 @@ const ChatPage = () => {
               </button>
             </div>
           ) : (
-            conversations.map(conv => (
+            // Hee we map through the conversations in reverse order to show the most recent
+            [...conversations].reverse().map(conv => (
               <div 
                 key={conv.id}
                 className={`conversation-item ${selectedConversation === conv.id ? 'active' : ''}`}
@@ -269,6 +312,18 @@ const ChatPage = () => {
                 <div className="conversation-info">
                   <div className="conversation-title">{conv.title}</div>
                 </div>
+                <button 
+                  className="delete-conversation-btn"
+                  onClick={(e) => deleteConversation(e, conv.id)}
+                  title="Delete conversation"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
               </div>
             ))
           )}
@@ -294,7 +349,6 @@ const ChatPage = () => {
         </div>
       </div>
       
-      {/* Main Chat Area */}
       <div className="chat-area">
         {selectedConversation ? (
           <>
@@ -302,7 +356,7 @@ const ChatPage = () => {
               {messages.length === 0 ? (
                 <div className="welcome-message">
                   <h2>Begin a new conversation</h2>
-                  <p>Ask anything, get helpful answers</p>
+                  <p>Ask anything!</p>
                 </div>
               ) : (
                 messages.map(message => (
@@ -310,11 +364,7 @@ const ChatPage = () => {
                     key={message.id} 
                     className={`message ${message.is_user ? 'user-message' : 'ai-message'}`}
                   >
-                    <div className="message-avatar">
-                      {message.is_user 
-                        ? (user?.username.charAt(0).toUpperCase() || 'U')
-                        : 'AI'}
-                    </div>
+                   
                     <div className="message-content">
                       <div className="message-text">{message.content}</div>
                     </div>

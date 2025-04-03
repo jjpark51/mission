@@ -125,6 +125,24 @@
   color: #6c757d;
   margin-top: 2px;
 }
+.delete-conversation-btn {
+  position: relative;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.conversation-item:hover .delete-conversation-btn {
+  opacity: 1;
+}
+
+.delete-conversation-btn:hover {
+  color: #e53935;
+}
 
 .sidebar-footer {
   padding: 15px;

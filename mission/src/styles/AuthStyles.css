@@ -51,12 +51,6 @@
   text-align: center;
 }
 
-.auth-subtitle {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 30px;
-  text-align: center;
-}
 
 .auth-form {
   display: flex;
@@ -119,26 +113,4 @@
   border-radius: 6px;
   margin-bottom: 20px;
   font-size: 14px;
-}
-
-.auth-redirect {
-  margin-top: 30px;
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-}
-
-.auth-redirect-link {
-  background: none;
-  border: none;
-  color: #4a90e2;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0;
-  text-decoration: none;
-}
-
-.auth-redirect-link:hover {
-  text-decoration: underline;
 }
