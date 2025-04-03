@@ -28,7 +28,7 @@ ChatApp Backend is built on the FastAPI framework and provides user authenticati
 2. Create and activate a virtual environment:
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate  # this is for ubuntu
    ```
 
 3. Install dependencies:
@@ -51,10 +51,14 @@ ChatApp Backend is built on the FastAPI framework and provides user authenticati
    OPENAI_API_KEY=your_openai_api_key
    ```
 
-5. Create the database:
+5. DB setup with MySQL workbench:
+   - open MySQL Workbench and connect to your MySQL server
+   - create a new DB:
+
    ```sql
    CREATE DATABASE chatapp_db;
    ```
+   - the application will automatically create the tables when it first runs, using SQLAlchemy's create_all() function
 
 ### Running the Application
 
