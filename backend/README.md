@@ -8,7 +8,43 @@ ChatApp Backend is built on the FastAPI framework and provides user authenticati
 
 1. **Layered Architecture**: code is separated into components like models, schemas, crud, and auth to improve readability
 2. **Token-based Authentication**: Implemented secure user authentication and authorization using JWT.
-3. **Relational Database**: managed relationships between users, conversations, and messages using SQLAlchemy ORM with MySQL.
+3. **Relational Database**: managed relationships between users, conversations, and messages using SQLAlchemy ORM with MySQL.<br><br>
+## DB Management
+-> MySQL Workbench
+1. user-conversation relationship:
+
+- one-to-many relationship where each user can have multiple conversations
+- implemented via a foreign key (user_id) in the conversations table
+
+2. conversation-message relationship:
+
+- one-to-many relationship where each conversation contains multiple messages
+- implemented via a foreign key (conversation_id) in the Messages table
+- messages are ordered in time order
+- each message has an is_user boolean flag to tell between user messages and GPT
+- 
+
+3. conversation context preservation:
+
+- all messages within a conversation are linked via their conversation_id
+- when generating GPT responses, the system retrieves previous messages to maintain context
+
+
+4.  message handling:
+
+- user messages and GPT responses are stored with distinct is_user flags
+- This allows for different styling in the frontend
+
+5. cascading deletion:
+
+- when a user is deleted -> all their conversations are removed
+- when a conversation is deleted -> all messages are removed
+- this prevents orphaned records
+
+
+6. optimization techniques:
+
+- the conversation title is stored for quick reference in the UI without loading all messages
 
 ## Installation and Setup Guide
 
@@ -110,40 +146,4 @@ The server runs at `http://localhost:8000` by default.
    - users can view their past conversation list.
    - conversations can be deleted.
 
-### DB Management
--> MySQL Workbench
 
-1. user-conversation relationship:
-
-- one-to-many relationship where each user can have multiple conversations
-- implemented via a foreign key (user_id) in the conversations table
-
-2. conversation-message relationship:
-
-- one-to-many relationship where each conversation contains multiple messages
-- implemented via a foreign key (conversation_id) in the Messages table
-- messages are ordered in time order
-- each message has an is_user boolean flag to tell between user messages and GPT
-- 
-
-3. conversation context preservation:
-
-- all messages within a conversation are linked via their conversation_id
-- when generating GPT responses, the system retrieves previous messages to maintain context
-
-
-4.  message handling:
-
-- user messages and GPT responses are stored with distinct is_user flags
-- This allows for different styling in the frontend
-
-5. cascading deletion:
-
-- when a user is deleted -> all their conversations are removed
-- when a conversation is deleted -> all messages are removed
-- this prevents orphaned records
-
-
-6. optimization techniques:
-
-- the conversation title is stored for quick reference in the UI without loading all messages
